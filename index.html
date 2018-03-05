@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Phliker</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" type="text/css" href="css/style.css">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	<script type="text/javascript" src="http://botmonster.com/jquery-bootpag/jquery.bootpag.js"></script>
+	<script src="js/app.js"></script>
+</head>
+<body class="body">
+<nav class="navbar navbar-inverse" id="navbar">
+	<div class="container-fluid">
+		<div class="navbar-header">
+			<a class="navbar-brand" href="#">Phliker</a>
+		</div>
+
+		<form class="navbar-form navbar-right" action="#">
+			<div class="form-group">
+				<input type="text" class="form-control" id="text-search1" placeholder="Search by tags...">
+			</div>
+			<button class="btn btn-default" id="btn-search1">Go!</button>
+		</form>
+	</div>
+
+</nav>
+<div class="container">
+		<div class="input-group" id="div-search">
+			<input class="form-control" id="text-search" type="text" placeholder="Search images..." required/>
+			<span class="input-group-btn">
+				<button class="btn" id="btn-search">
+					<i class="glyphicon glyphicon-search" aria-hidden="true"></i> Search
+				</button>
+			</span>
+		</div>
+	<div id="boot-pag"></div>
+	<div id="div-loading"></div>
+</div>
+<div id="search-result" class="row"></div>
+
+
+<!-- Modal start -->
+<div class="modal fade" id="modal-img-info" role="dialog">
+	<div class="modal-dialog">
+
+		<!-- Modal content start-->
+		<div class="modal-content">
+			<div class="modal-header">
+				<h3 class="modal-title" id="modal-img-title" style="text-align: center"></h3>
+			</div>
+			<div class="modal-body">
+				<div id="modal-img-source" style="text-align: center"></div>
+			</div>
+			<div class="modal-footer">
+				<div id="modal-img-desc" style="text-align: left"></div>
+				<ul class="pager">
+					<li class="previous" id="modal-img-prev"><a href="#">Previous</a></li>
+					<li class="next" id="modal-img-next"><a href="#">Next</a></li>
+				</ul>
+			</div>
+		</div>
+		<!-- Modal content end-->
+
+	</div>
+</div>
+<!-- Modal end -->
+
+</body>
+</html>

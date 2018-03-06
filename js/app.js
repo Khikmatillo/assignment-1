@@ -1,7 +1,7 @@
 $(document).ready(function (){
 
     //initialize global variables starts ------------------
-    var MAX_PAGES = 6;
+    var MAX_PAGES = 0;
     var KEY = "a8a36cee073bf89c60264ceb317ee800";
     var PHOTOS;
     var INDEX = 0;
@@ -18,38 +18,55 @@ $(document).ready(function (){
             "&tags=" + tags + "&per_page=40&page=" + page + "&format=json&nojsoncallback=1";
 
         $.get(link, function (data) {
-            MAX_PAGES = data.photos.pages;
             console.info(data);
-            PHOTOS = data.photos.photo;
-            $("#text-search1").val(tags);
-            showData.empty();
-            var len = PHOTOS.length;
-            var list = "";
-            //load images in 8 rows and 5 columns format
-            for(var i = 0; i < len/5; i++){
-                var content = "";
-                //load retrieved photos into a variable
-                for(var j = 0; j < 5; j++){
-                    var index = 5 * i + j;
-                    var farm_id = PHOTOS[index].farm;
-                    var server_id = PHOTOS[index].server;
-                    var id = PHOTOS[index].id;
-                    var secret = PHOTOS[index].secret;
-                    //custom link for each image
-                    var img_link = "https://farm" + farm_id + ".staticflickr.com/" + server_id + "/" + id + "_" + secret + ".jpg";
-                    content += '<img src="' + img_link + '" class="img-show-info" id=' + id + ' style="width: 100%"/>';
-                }
-                list += '<div class="column">' + content + '</div>';
-            }
-            //display retrieved images
-            $("#div-loading").hide();
-            showData.append(list);
+            //handle error when status failed
+            if(data.stat !== "fail"){
+                MAX_PAGES = data.photos.pages;
+                PHOTOS = data.photos.photo;
+                var len = PHOTOS.length;
+                $("#text-search1").val(tags);
+                showData.empty();
 
-            //show no image if result is empty
-            if(len === 0){
-                var content1 = '<p>No data for tag ' + tags + '</p>';
-                showData.append(content1);
+                $("#boot-pag").bootpag({total: MAX_PAGES});
+
+                //handle error when empty result retrieved
+                if(len !== 0){
+                    var list = "";
+                    //load images in 8 rows and 5 columns format
+                    for(var i = 0; i < len/5; i++){
+                        var content = "";
+                        //load retrieved photos into a variable
+                        for(var j = 0; j < 5; j++){
+                            var index = 5 * i + j;
+                            var farm_id = PHOTOS[index].farm;
+                            var server_id = PHOTOS[index].server;
+                            var id = PHOTOS[index].id;
+                            var secret = PHOTOS[index].secret;
+                            //custom link for each image
+                            var img_link = "https://farm" + farm_id + ".staticflickr.com/" + server_id + "/" + id + "_" + secret + ".jpg";
+                            content += '<img src="' + img_link + '" class="img-show-info" id=' + id + ' style="width: 100%"/>';
+                        }
+                        list += '<div class="column">' + content + '</div>';
+                    }
+                    //display retrieved images
+                    $("#boot-pag").show();
+                    $("#div-loading").hide();
+                    showData.append(list);
+
+                    //show no image if result is empty
+                    if(len === 0){
+                        var content1 = '<p>No data for tag ' + tags + '</p>';
+                        showData.append(content1);
+                    }
+                }else{
+                    $("#div-loading").text('No image found for the tag ' + tags).show();
+                    $("#boot-pag").hide();
+                }
+            }else{
+                $("#boot-pag").hide();
+                $("#div-loading").text('Failed to load image. Caused by: ' + data.message);
             }
+
         });
         //display loading message until function $.get callback
         $("#div-loading").text('Loading images from https://www.flickr.com/');
@@ -67,18 +84,16 @@ $(document).ready(function (){
         if(tags !== ""){
             $("#div-search").hide();
             loadPage(1, tags);
-            console.info(MAX_PAGES);
             //initialize pagination
             $("#boot-pag").bootpag({
                 total: MAX_PAGES,
                 page: 1,
-                maxVisible: 5
+                maxVisible: 5,
+                first: '←',
+                last: '→',
+                leaps: true,
+                firstLastUse: true
             }).on("page", function(event, num){
-                $(this).bootpag({total: MAX_PAGES,
-                    first: '←',
-                    last: '→',
-                    leaps: true,
-                    firstLastUse: true});
                 loadPage(num, tags);
             });
         }else{
